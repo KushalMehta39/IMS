@@ -1,31 +1,34 @@
 let secretNumber = "";
 let attempts = 0;
 const maxAttempts = 10;
-let gameStarted = false;
 
 const modeSelect = document.getElementById("mode");
 const startBtn = document.getElementById("startBtn");
-const gameArea = document.getElementById("gameArea");
-const guessInput = document.getElementById("guessInput");
 const guessBtn = document.getElementById("guessBtn");
+const restartBtn = document.getElementById("restartBtn");
+const guessInput = document.getElementById("guessInput");
 const feedbackElem = document.getElementById("feedback");
+const progressBar = document.getElementById("progressBar");
 const attemptsLeftElem = document.getElementById("attemptsLeft");
-const attemptsProgressElem = document.getElementById("attemptsProgress");
-const retryBtn = document.getElementById("retryBtn");
+const gameArea = document.getElementById("gameArea");
+const setupArea = document.getElementById("setupArea");
 
-// Generate secret number based on mode
 function generateNumber(mode) {
   let digits = [];
+
   while (digits.length < 5) {
     const digit = Math.floor(Math.random() * 10);
-    if (digits.length === 0 && digit === 0) continue; // No leading zero
+
+    if (digits.length === 0 && digit === 0) continue; // No leading 0
+
     if (mode === "easy" && digits.includes(digit)) continue;
+
     digits.push(digit);
   }
+
   return digits.join("");
 }
 
-// Calculate bulls and cows
 function getBullsAndCows(secret, guess) {
   let bulls = 0;
   let cows = 0;
@@ -56,55 +59,48 @@ function getBullsAndCows(secret, guess) {
   return { bulls, cows };
 }
 
-// Update UI for attempts left
-function updateAttemptsUI() {
-  const attemptsLeft = maxAttempts - attempts;
-  attemptsLeftElem.textContent = attemptsLeft;
-  const percent = (attemptsLeft / maxAttempts) * 100;
-  attemptsProgressElem.style.width = percent + "%";
+function updateProgress() {
+  const widthPercent = ((maxAttempts - attempts) / maxAttempts) * 100;
+  progressBar.style.width = widthPercent + "%";
+
+  attemptsLeftElem.textContent = `Attempts left: ${maxAttempts - attempts}`;
 }
 
-// End the game — disable inputs, show retry
-function endGame(win = false) {
-  gameStarted = false;
-  guessInput.disabled = true;
-  guessBtn.disabled = true;
-  retryBtn.style.display = "block";
-
-  if (win) {
-    feedbackElem.classList.add("win");
-    feedbackElem.classList.remove("lose");
-  } else {
-    feedbackElem.classList.add("lose");
-    feedbackElem.classList.remove("win");
-  }
-}
-
-// Start a new game
-startBtn.addEventListener("click", () => {
-  secretNumber = generateNumber(modeSelect.value);
-  attempts = 0;
-  gameStarted = true;
-
-  gameArea.style.display = "block";
+function resetUI() {
   feedbackElem.textContent = "";
-  feedbackElem.className = "";
+  feedbackElem.classList.remove("win-feedback", "lose-feedback");
+  guessInput.value = "";
   guessInput.disabled = false;
   guessBtn.disabled = false;
-  retryBtn.style.display = "none";
-  guessInput.value = "";
+  updateProgress();
   guessInput.focus();
+}
 
-  updateAttemptsUI();
-});
+function startGame() {
+  const mode = modeSelect.value;
+  secretNumber = generateNumber(mode);
+  attempts = 0;
+  resetUI();
 
-// Handle guess button and Enter key press
-function makeGuess() {
-  if (!gameStarted) {
-    alert("Please start the game first.");
-    return;
+  setupArea.style.display = "none";
+  gameArea.style.display = "flex";
+  restartBtn.style.display = "block";
+}
+
+function endGame(win) {
+  guessInput.disabled = true;
+  guessBtn.disabled = true;
+
+  if (win) {
+    feedbackElem.textContent = `🎉 You win in ${attempts} attempt${attempts > 1 ? "s" : ""}!`;
+    feedbackElem.classList.add("win-feedback");
+  } else {
+    feedbackElem.textContent = `💀 Game over! The number was ${secretNumber}`;
+    feedbackElem.classList.add("lose-feedback");
   }
+}
 
+function makeGuess() {
   const guess = guessInput.value.trim();
 
   if (!/^\d{5}$/.test(guess)) {
@@ -116,44 +112,33 @@ function makeGuess() {
 
   const { bulls, cows } = getBullsAndCows(secretNumber, guess);
 
-  feedbackElem.textContent = `${bulls} Bulls, ${cows} Cows`;
-  feedbackElem.className = "";
-
-  updateAttemptsUI();
+  feedbackElem.textContent = `🐂 ${bulls} Bull${bulls !== 1 ? "s" : ""}, 🐄 ${cows} Cow${cows !== 1 ? "s" : ""}`;
+  updateProgress();
 
   if (bulls === 5) {
-    feedbackElem.textContent = `🎉 You win in ${attempts} attempts!`;
     endGame(true);
   } else if (attempts >= maxAttempts) {
-    feedbackElem.textContent = `💀 Game over! The number was ${secretNumber}`;
     endGame(false);
+  } else {
+    guessInput.value = "";
+    guessInput.focus();
   }
-
-  guessInput.value = "";
-  guessInput.focus();
 }
+
+// Event listeners
+startBtn.addEventListener("click", startGame);
+
+restartBtn.addEventListener("click", () => {
+  attempts = 0;
+  resetUI();
+  startGame();
+});
 
 guessBtn.addEventListener("click", makeGuess);
 
 guessInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
+  if (e.key === "Enter" || e.key === "ArrowRight") {
     e.preventDefault();
     makeGuess();
   }
-});
-
-retryBtn.addEventListener("click", () => {
-  retryBtn.style.display = "none";
-  feedbackElem.textContent = "";
-  feedbackElem.className = "";
-  guessInput.value = "";
-  guessInput.disabled = false;
-  guessBtn.disabled = false;
-  guessInput.focus();
-
-  attempts = 0;
-  updateAttemptsUI();
-
-  gameArea.style.display = "none";
-  gameStarted = false;
 });

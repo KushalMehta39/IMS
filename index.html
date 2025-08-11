@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,45 +9,46 @@
 <body>
   <div class="container">
     <h1>Bulls & Cows</h1>
-    <p>Guess the 5-digit number! You have 10 attempts.</p>
+
+    <p class="instructions">Guess the 5-digit number! You have 10 attempts.</p>
 
     <p class="note">
       <strong>Note:</strong><br />
-      - A <strong>Bull</strong> means the digit is correct and in the correct position.<br />
-      - A <strong>Cow</strong> means the digit is correct but in the wrong position.
+      - <span class="bull">Bull</span>: digit correct and in correct position.<br />
+      - <span class="cow">Cow</span>: digit correct but wrong position.
     </p>
 
-    <div>
+    <div id="setupArea">
       <label for="mode">Choose mode:</label>
       <select id="mode">
         <option value="easy">Easy (no repeating digits)</option>
         <option value="hard">Hard (digits may repeat)</option>
       </select>
-      <button id="startBtn">Start Game</button>
+      <button id="startBtn" class="primary-btn">Start Game</button>
     </div>
 
     <div id="gameArea" style="display:none;">
+      <div id="statusArea">
+        <div id="progressContainer">
+          <div id="progressBar"></div>
+        </div>
+        <div id="attemptsLeft">Attempts left: 10</div>
+        <div id="feedback"></div>
+      </div>
+
       <input
         type="text"
         id="guessInput"
         maxlength="5"
         placeholder="Enter 5-digit guess"
-        autocomplete="off"
         inputmode="numeric"
-        aria-label="Enter your 5-digit guess"
+        pattern="[0-9]*"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
       />
-      <button id="guessBtn">Guess</button>
-
-      <p id="feedback" aria-live="polite"></p>
-
-      <div id="attemptsContainer">
-        <span>Attempts Left: <span id="attemptsLeft">10</span></span>
-        <div id="attemptsBar" aria-hidden="true">
-          <div id="attemptsProgress"></div>
-        </div>
-      </div>
-
-      <button id="retryBtn" style="display:none;">Retry</button>
+      <button id="guessBtn" class="primary-btn">Guess</button>
+      <button id="restartBtn" class="secondary-btn">Restart</button>
     </div>
   </div>
 
