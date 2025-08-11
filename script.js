@@ -1,39 +1,49 @@
 let secretNumber = "";
 let attempts = 0;
 const maxAttempts = 10;
+let gameStarted = false;
 
 document.getElementById("startBtn").addEventListener("click", () => {
   const mode = document.getElementById("mode").value;
   secretNumber = generateNumber(mode);
   attempts = 0;
+  gameStarted = true;
+
   document.getElementById("gameArea").style.display = "block";
-  document.getElementById("history").innerHTML = "";
   document.getElementById("feedback").textContent = "";
   document.getElementById("guessInput").value = "";
+  document.getElementById("guessInput").focus();
 });
 
 document.getElementById("guessBtn").addEventListener("click", () => {
+  if (!gameStarted) {
+    alert("Please start the game first.");
+    return;
+  }
+
   const guess = document.getElementById("guessInput").value.trim();
-  
+
   if (!/^\d{5}$/.test(guess)) {
     alert("Please enter a valid 5-digit number.");
     return;
   }
 
   attempts++;
+
   const { bulls, cows } = getBullsAndCows(secretNumber, guess);
 
-  const entry = document.createElement("li");
-  entry.textContent = `${guess} → ${bulls} Bulls, ${cows} Cows`;
-  document.getElementById("history").appendChild(entry);
+  document.getElementById("feedback").textContent = `${bulls} Bulls, ${cows} Cows`;
 
   if (bulls === 5) {
     document.getElementById("feedback").textContent = `🎉 You win in ${attempts} attempts!`;
+    gameStarted = false;
   } else if (attempts >= maxAttempts) {
     document.getElementById("feedback").textContent = `💀 Game over! The number was ${secretNumber}`;
+    gameStarted = false;
   }
 
   document.getElementById("guessInput").value = "";
+  document.getElementById("guessInput").focus();
 });
 
 function generateNumber(mode) {
