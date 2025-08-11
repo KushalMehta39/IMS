@@ -12,8 +12,8 @@
     <p>Guess the 5-digit number! You have 10 attempts.</p>
 
     <p class="note">
-      <strong>Note:</strong><br>
-      - A <strong>Bull</strong> means the digit is correct and in the correct position.<br>
+      <strong>Note:</strong><br />
+      - A <strong>Bull</strong> means the digit is correct and in the correct position.<br />
       - A <strong>Cow</strong> means the digit is correct but in the wrong position.
     </p>
 
@@ -27,9 +27,27 @@
     </div>
 
     <div id="gameArea" style="display:none;">
-      <input type="text" id="guessInput" maxlength="5" placeholder="Enter 5-digit guess" />
+      <input
+        type="text"
+        id="guessInput"
+        maxlength="5"
+        placeholder="Enter 5-digit guess"
+        autocomplete="off"
+        inputmode="numeric"
+        aria-label="Enter your 5-digit guess"
+      />
       <button id="guessBtn">Guess</button>
-      <p id="feedback"></p>
+
+      <p id="feedback" aria-live="polite"></p>
+
+      <div id="attemptsContainer">
+        <span>Attempts Left: <span id="attemptsLeft">10</span></span>
+        <div id="attemptsBar" aria-hidden="true">
+          <div id="attemptsProgress"></div>
+        </div>
+      </div>
+
+      <button id="retryBtn" style="display:none;">Retry</button>
     </div>
   </div>
 
