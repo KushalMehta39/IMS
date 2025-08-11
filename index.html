@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -14,10 +14,11 @@
 
     <p class="note">
       <strong>Note:</strong><br />
-      - <span class="bull">Bull</span>: digit correct and in correct position.<br />
-      - <span class="cow">Cow</span>: digit correct but wrong position.
+      - <span class="bull">🐂 Bull</span>: digit correct and in correct position.<br />
+      - <span class="cow">🐄 Cow</span>: digit correct but wrong position.
     </p>
 
+    <!-- Setup Area -->
     <div id="setupArea">
       <label for="mode">Choose mode:</label>
       <select id="mode">
@@ -27,7 +28,10 @@
       <button id="startBtn" class="primary-btn">Start Game</button>
     </div>
 
+    <!-- Game Area -->
     <div id="gameArea" style="display:none;">
+
+      <!-- Status -->
       <div id="statusArea">
         <div id="progressContainer">
           <div id="progressBar"></div>
@@ -36,19 +40,34 @@
         <div id="feedback"></div>
       </div>
 
-      <input
-        type="text"
-        id="guessInput"
-        maxlength="5"
-        placeholder="Enter 5-digit guess"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        autocomplete="off"
-        autocorrect="off"
-        autocapitalize="off"
-      />
-      <button id="guessBtn" class="primary-btn">Guess</button>
-      <button id="restartBtn" class="secondary-btn">Restart</button>
+      <!-- Guess history for Easy Mode -->
+      <div id="guessHistory" class="guess-history">
+        <div class="guess-column" id="guessCol1"></div>
+        <div class="guess-column" id="guessCol2"></div>
+      </div>
+
+      <!-- Input & Controls -->
+      <div class="input-controls">
+        <input
+          type="text"
+          id="guessInput"
+          maxlength="5"
+          placeholder="Enter 5-digit guess"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+        />
+        <button id="guessBtn" class="primary-btn">Guess</button>
+      </div>
+
+      <!-- Game Buttons -->
+      <div class="game-buttons">
+        <button id="restartBtn" class="secondary-btn">Restart</button>
+        <button id="changeModeBtn" class="secondary-btn">Change Mode</button>
+      </div>
+
     </div>
   </div>
 
